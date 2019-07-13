@@ -1,0 +1,48 @@
+// how the vending machine should behave   ...
+  
+  // The vending machine accepts coins and allows you
+  //   to make a selection from its inventory. 
+  //The vending machine will dispense
+  //   the item you have selected if you gave it enough money.
+  //   If you don't have enough money, it will give you your money back.
+
+// test cases 
+
+a. purchasing an item that has 0 quantities in the inventory  - return msg out of stock 
+b. 
+
+  1. print inventory function should return all the inventory 
+  2. (function) tells u what is in the inventory 
+ screen that shows items, number of items and costs.
+
+
+
+// this happens this should return // this function should do this 
+
+
+
+// print invetory should return an entire inventory:-  
+// coke { 
+//price: 
+//stock:
+// }
+
+///[ ] Print vending machine inventory (function) tells u what is in the inventory 
+// screen that shows items, number of items and costs. 
+// when inventory is vendingmachineinventory - should return that vendingmachineinventory
+//test case is unique? simplier/ more test cases/ minimum of 5 items. 
+
+// 4 test cases ie. test case: when user chooses an item in the inventory :- 
+// machine should print price for user to insert - and deducts as the amt from the user insertion
+
+//[ ] Refill vending machine inventory // coke =  1 // adds provide input (adds to input to ventory)
+// add item that existing in the machine
+
+// pre-defined items. 
+ 
+//[ ] Re-supply vending machine change  // function //  
+//[ ] Dispense inventory based on payment  // function  // making payment - return item to what is purchased
+// and changed if any // 
+// is item in inventory? 
+
+//[ ] Return change as coins (e.g. \$0.35 is 1 quarter and 1 dime) // function 
