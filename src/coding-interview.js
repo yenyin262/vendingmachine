@@ -5,6 +5,9 @@ class VendingMachine {
     this.selectedProduct = null;
     this.updateUnits = null;
     this.refill = 0;
+    this.refillChange = 0;
+    this.dispenseItem = null;
+    this.selectedChange = null;
     if (inventory) {
       this.inventory = inventory;
     } else {
@@ -19,11 +22,16 @@ class VendingMachine {
     this.selectedProduct = product;
     // checks whether product is in inventory?
     // if not in inventory value will be  undefined
-    if (this.inventory[product] === undefined) {
+    if (
+      this.inventory === undefined ||
+      this.inventory.item === undefined ||
+      this.inventory.item[product] === undefined ||
+      this.inventory.item[product].price === undefined
+    ) {
       return null;
     }
 
-    return this.inventory[product].price;
+    return this.inventory.item[product].price;
     // selects product
     // returns price of product if product in stock
     // returns error msg if product is out of stock
@@ -32,12 +40,19 @@ class VendingMachine {
   // function-global
   // method - function for a class
   payProduct(centsPaid) {
-    if (!this.inventory[this.selectedProduct]) {
+    if (
+      !this.inventory ||
+      !this.inventory.item ||
+      !this.inventory.item[this.selectedProduct] === undefined
+    ) {
       this.coinReturn = centsPaid;
-    } else if (this.inventory[this.selectedProduct].units === 0) {
+    } else if (!this.inventory.item[this.selectedProduct]) {
+      this.coinReturn = centsPaid;
+    } else if (this.inventory.item[this.selectedProduct].units === 0) {
       this.coinReturn = centsPaid;
     } else {
-      this.coinReturn = centsPaid - this.inventory[this.selectedProduct].price;
+      this.coinReturn =
+        centsPaid - this.inventory.item[this.selectedProduct].price;
     }
     // check if money inserted is the same as stated in inventory
     // if not return change
@@ -48,22 +63,29 @@ class VendingMachine {
   // need to update inventory when payment sucessful
 
   updateInventory(update) {
-    this.inventory[this.selectedProduct].units = update;
-    if (this.inventory[this.selectedProduct]) {
+    this.inventory.item[this.selectedProduct].units = update;
+    if (this.inventory.item[this.selectedProduct]) {
       this.updateUnits = update;
     } else {
-      return this.inventory;
+      return this.inventory.item;
     }
     console.log("this is update inventory");
   }
   getInventory() {
-    const inventoryKeys = Object.keys(this.inventory).sort();
+    if (this.inventory.item === undefined) {
+      return null;
+    }
+    const inventoryKeys = Object.keys(this.inventory.item).sort();
 
     if (inventoryKeys.length > 1) {
       return inventoryKeys;
     } else if (inventoryKeys.length > 0) {
       return inventoryKeys[0];
-    } else {
+    }
+    // else if (inventoryKeys === undefined) {
+    //   return undefined;
+    // }
+    else {
       return null;
     }
 
@@ -72,7 +94,7 @@ class VendingMachine {
   }
   refillInventory(refill) {
     this.refill = refill;
-    if (this.inventory[this.selectedProduct].units === 0) {
+    if (this.inventory.item[this.selectedProduct].units === 0) {
       this.refill = refill;
     } else {
       this.refill;
@@ -89,21 +111,33 @@ class VendingMachine {
     // refill money too
   }
 
-  resupplyVendingMachineChange() {
-    console.log("this supples change to the machine");
-    //re supplying coins - resupplying change
+  selectedChange(change) {
+    this.selectedChange = change;
+    if (this.inventory[change] === undefined) {
+      return null;
+    } else {
+      this.inventory[product].price >= this.coinReturn;
+    }
   }
 
-  dispenseInventory() {
-    // if there is no product or selected prdocut dont exist
-    // dispense
-    //
-    //making payment - return item to what is purchased
-    // and changed if any //
-    // is item in inventory?
-    // check if item is in inventory? if it is in inventory// check amount and whether change needed?
-    // no change return item only
-    // if change needed - return item and change
+  resupplyChange(change) {
+    const inventoryKeys = Object.keys(this.inventory.coins).sort();
+    this.refillChange = change;
+    if (this.inventory) console.log("this supples change to the machine");
+    //re supplying coins - resupplying change;
+  }
+
+  dispenseInventory(product) {
+    // how much things cost to c/f how much money is inserted
+    this.dispenseItem = product;
+    if (
+      this.inventory[this.selectedProduct] &&
+      this.inventory[this.selectedProduct].price >= this.coinReturn
+    ) {
+      this.dispenseItem = product;
+    } else {
+      this.dispenseItem;
+    }
   }
 }
 module.exports = VendingMachine;
