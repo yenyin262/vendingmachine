@@ -1,15 +1,17 @@
 class VendingMachine {
   constructor(inventory) {
-    // properties are variables assign to a class
+    // properties = variables assign to a class
     this.coinReturn = 0;
     this.selectedProduct = null;
+    this.updateUnits = null;
+    this.refill = 0;
     if (inventory) {
       this.inventory = inventory;
     } else {
       this.inventory = {};
     }
   }
-  // need to state loaded? whether money is in vending machine??
+  // need to state money inmachine? whether money is in vending machine??
 
   // functions
 
@@ -21,7 +23,7 @@ class VendingMachine {
       return null;
     }
 
-    return this.inventory[product];
+    return this.inventory[product].price;
     // selects product
     // returns price of product if product in stock
     // returns error msg if product is out of stock
@@ -32,8 +34,10 @@ class VendingMachine {
   payProduct(centsPaid) {
     if (!this.inventory[this.selectedProduct]) {
       this.coinReturn = centsPaid;
+    } else if (this.inventory[this.selectedProduct].units === 0) {
+      this.coinReturn = centsPaid;
     } else {
-      this.coinReturn = centsPaid - this.inventory[this.selectedProduct];
+      this.coinReturn = centsPaid - this.inventory[this.selectedProduct].price;
     }
     // check if money inserted is the same as stated in inventory
     // if not return change
@@ -41,6 +45,17 @@ class VendingMachine {
     // wrong currency?
   }
 
+  // need to update inventory when payment sucessful
+
+  updateInventory(update) {
+    this.inventory[this.selectedProduct].units = update;
+    if (this.inventory[this.selectedProduct]) {
+      this.updateUnits = update;
+    } else {
+      return this.inventory;
+    }
+    console.log("this is update inventory");
+  }
   getInventory() {
     const inventoryKeys = Object.keys(this.inventory).sort();
 
@@ -55,7 +70,18 @@ class VendingMachine {
     console.log("this is printing the inventory");
     // this function is to return the object inventory showing the products
   }
-  refillVendingMachineInventory() {
+  refillInventory(refill) {
+    this.refill = refill;
+    if (this.inventory[this.selectedProduct].units === 0) {
+      this.refill = refill;
+    } else {
+      this.refill;
+    }
+    // refill - if statement
+    // if 15-20 no refill
+    // if < 14 refill
+    //
+
     console.log("this is the refill inventory");
     // provide input (adds to input to ventory)
     // add item that existing in the machine
