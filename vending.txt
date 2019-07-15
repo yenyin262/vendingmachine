@@ -22,17 +22,13 @@ b.
 
 
 // print invetory should return an entire inventory:-  
-// coke { 
-//price: 
-//stock:
-// }
 
 ///[ ] Print vending machine inventory (function) tells u what is in the inventory 
 // screen that shows items, number of items and costs. 
 // when inventory is vendingmachineinventory - should return that vendingmachineinventory
 //test case is unique? simplier/ more test cases/ minimum of 5 items. 
 
-// 4 test cases ie. test case: when user chooses an item in the inventory :- 
+// ie. test case: when user chooses an item in the inventory :- 
 // machine should print price for user to insert - and deducts as the amt from the user insertion
 
 //[ ] Refill vending machine inventory // coke =  1 // adds provide input (adds to input to ventory)
@@ -45,4 +41,10 @@ b.
 // and changed if any // 
 // is item in inventory? 
 
-//[ ] Return change as coins (e.g. \$0.35 is 1 quarter and 1 dime) // function 
+//[ ] Return change as coins 
+
+
+
+
+
+
