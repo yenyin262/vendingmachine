@@ -1,13 +1,13 @@
 {
   "name": "coding-interview",
   "version": "1.0.0",
-  "description": "",
+  "description": "Algorithms to test vending machine functionality",
   "main": "index.js",
   "scripts": {
     "test": "jest --verbose"
   },
   "keywords": [],
-  "author": "",
+  "author": "Hing Yen Yin",
   "license": "ISC",
   "devDependencies": {
     "jest-cli": "^24.8.0"
