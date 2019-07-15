@@ -13,11 +13,6 @@ describe("VendingMachine", () => {
     it(" should select a product and return no price", () => {
       expect(vendingMachine.selectProduct("oreo")).toEqual(null);
     });
-    it(" should pay for product and return money ", () => {
-      vendingMachine.selectProduct("oreo");
-      vendingMachine.payProduct(200);
-      expect(vendingMachine.coinReturn).toEqual(200);
-    });
   });
   describe("vending machine with inventory", () => {
     beforeEach(() => {
@@ -119,7 +114,7 @@ describe("VendingMachine", () => {
     it(" should select a product and return price", () => {
       expect(vendingMachine.selectProduct("MountainDew")).toEqual(400);
     });
-    it.only("should return money for product out of stock ", () => {
+    it("should return money for product out of stock ", () => {
       vendingMachine.selectProduct("MountainDew");
       vendingMachine.payProduct(400);
       expect(vendingMachine.returnChanges(400, 400)).toEqual(400);
@@ -147,7 +142,7 @@ describe("VendingMachine", () => {
       expect(vendingMachine.dispenseItem).toEqual(null);
     });
   });
-  describe("vending machine with available coins ", () => {
+  describe("Vending Machine and its change", () => {
     beforeEach(() => {
       vendingMachine = new VendingMachine({
         item: {
@@ -164,7 +159,7 @@ describe("VendingMachine", () => {
         "twoDollar"
       ]);
     });
-    it(" should resupply change where the value of a coin has reached an amount of 25 ", () => {
+    it("should resupply change where the value of a coin has reached an amount of 25 ", () => {
       expect(vendingMachine.resupplyChange(25)).toEqual(50);
     });
     it(" should not resupply change where the value of a coin minimum amount is 26 ", () => {

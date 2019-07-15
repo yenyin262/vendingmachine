@@ -108,7 +108,10 @@ class VendingMachine {
   }
 
   returnChanges(centsPaid, price) {
-    if (this.inventory.item[this.selectedProduct].units !== 0) {
+    if (
+      this.inventory.item[this.selectedProduct].units !== 0 &&
+      !this.inventory.item[this.selectedProduct]
+    ) {
       price = this.inventory.item[this.selectedProduct].price;
 
       this.coinReturn = centsPaid - price;
@@ -158,7 +161,6 @@ class VendingMachine {
       );
     } else {
       const change = this.coinReturn;
-      console.log(this.coinReturn, "booya");
       this.coinReturn = 0;
       return change;
     }
@@ -168,12 +170,6 @@ class VendingMachine {
     this.refillChange = change;
     const coinkeys = Object.keys(this.coinTypes);
     for (const coinkey of coinkeys) {
-      // if (
-      //   this.coinTypes === undefined ||
-      //   this.coinTypes[coinkey].amount === undefined
-      // ) {
-      //   return null;
-      // } else
       if (this.coinTypes[coinkey].amount === 25) {
         this.refillChange = change;
         let finalreturn = change + this.coinTypes[coinkey].amount;
@@ -185,7 +181,6 @@ class VendingMachine {
   }
 
   dispenseInventory(product, centsPaid) {
-    // how much things cost to c/f how much money is inserted
     this.coinReturn =
       centsPaid - this.inventory.item[this.selectedProduct].price;
     this.dispenseItem = product;
