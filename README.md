@@ -21,3 +21,7 @@ The Coding Interview Project involves using a single JavaScript Class to impleme
 
 1. Simplifies debugging process
 
+
+# SnapShot 
+
+<img width="831" alt="Screen Shot 2019-07-15 at 3 55 00 PM" src="https://user-images.githubusercontent.com/43800526/61254430-585cab80-a719-11e9-9471-9b1c2945a3e0.png">
