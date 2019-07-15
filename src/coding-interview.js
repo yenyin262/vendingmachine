@@ -14,20 +14,15 @@ class VendingMachine {
         name: 0.25,
         amount: 40
       },
-      OneDollar: {
+      oneDollar: {
         name: 1,
         amount: 40
       },
-      TwoDollar: {
+      twoDollar: {
         name: 2,
         amount: 0
       }
     };
-    // loop through original object = pass amount to new object //
-    //
-    // user needs 10 coins
-    // 2 dollars plus one dollar
-    //
 
     this.coinReturn = 0;
     this.selectedProduct = null;
@@ -35,17 +30,14 @@ class VendingMachine {
     this.refill = 0;
     this.refillChange = 0;
     this.dispenseItem = null;
-    this.selectedChange = null;
-    this.selectedCoin = null;
+    this.result = null;
+
     if (inventory) {
       this.inventory = inventory;
     } else {
       this.inventory = {};
     }
   }
-  // need to state money inmachine? whether money is in vending machine??
-
-  // functions
 
   getCoin() {
     this.coinTypes = Object.keys(this.coinTypes);
@@ -68,22 +60,6 @@ class VendingMachine {
     return this.inventory.item[product].price;
   }
 
-  selectCoin(coin) {
-    this.selectedCoin = coin;
-    // checks whether product is in inventory?
-    // if not in inventory value will be  undefined
-    // if (
-    //   this.inventory === undefined ||
-    //   this.inventory.item === undefined ||
-    //   this.inventory.item[product] === undefined ||
-    //   this.inventory.item[product].price === undefined
-    // ) {
-    //   return null;
-    // }
-
-    return this.coinTypes[coin];
-  }
-
   // function-global
   // method - function for a class
   payProduct(centsPaid) {
@@ -101,14 +77,7 @@ class VendingMachine {
       this.coinReturn =
         centsPaid - this.inventory.item[this.selectedProduct].price;
     }
-
-    // check if money inserted is the same as stated in inventory
-    // if not return change
-    // pay product returns money if no product is selected
-    // wrong currency?
   }
-
-  // need to update inventory when payment sucessful
 
   updateInventory(update) {
     this.inventory.item[this.selectedProduct].units = update;
@@ -142,46 +111,64 @@ class VendingMachine {
     }
   }
 
-  //   selectedChange(change) {
-  //     // this.selectedChange = change;
-  //     this.coinRetun = change;
-  //     if (this.inventory.item || this.inventory.item[change] === undefined) {
-  //       return null;
-  //     } else {
-  //       this.inventory.item[product].price >= this.coinReturn;
-  //     }
-  //   }
-
   returnChange() {
     const change = this.coinReturn;
+    console.log(this.coinReturn);
     this.coinReturn = 0;
     return change;
-    // if else statements // loops through object//
-    // need to return the number of coins
-    // know value only
   }
 
   returnChanges(centsPaid, price) {
     price = this.inventory.item[this.selectedProduct].price;
-    this.coinReturn = (centsPaid - price) * 100;
-    // value of coins in inventory
+
+    this.coinReturn = centsPaid - price;
+
     // operate biggest to smallest so it returns least number of coins
     let coins = [2, 1, 0.25, 0.1, 0.05];
     let coinsRound = coins.map(coin => coin * 100);
-    // coinsRound = [200, 100, 25, 10, 5]
+
     let returnCoin = [];
     for (let i in coinsRound) {
       let finalChange = coinsRound[i];
-      //pushing the  integer representing the coin to return
-      // [TwoDollar: 0 OneDollar: 0  TwentyFiveCents: 0 TenCents: 0  FiveCents:  0 ]
+      //each index of the return array represents the no. of coin in each coin type to return
       returnCoin.push(Math.floor(this.coinReturn / finalChange));
-      //update change
-      this.coinReturn = Math.round(this.coinReturn % returnCoin);
-      // returns [0] if returnChanges(600,600)
-    }
 
-    return returnCoin;
+      //update change value
+      this.coinReturn = Math.round(this.coinReturn % finalChange);
+    }
+    this.result = returnCoin;
+
+    return returnCoin.reduce(
+      (coinTypes, amount, index) => {
+        switch (index) {
+          case 0:
+            coinTypes["twoDollar"] = coinTypes.twoDollar + amount;
+            break;
+          case 1:
+            coinTypes["oneDollar"] = coinTypes.oneDollar + amount;
+            break;
+          case 2:
+            coinTypes["twentyFiveCents"] = coinTypes.twentyFiveCents + amount;
+            break;
+          case 3:
+            coinTypes["tenCents"] = coinTypes.tenCents + amount;
+            break;
+          case 4:
+            coinTypes["fiveCents"] = coinTypes.fiveCents + amount;
+            break;
+        }
+        return coinTypes;
+      },
+      {
+        twoDollar: 0,
+        oneDollar: 0,
+        twentyFiveCents: 0,
+        tenCents: 0,
+        fiveCents: 0
+      }
+    );
   }
+
   resupplyChange(change) {
     this.refillChange = change;
     const coinkeys = Object.keys(this.coinTypes);
@@ -198,24 +185,14 @@ class VendingMachine {
       }
     }
   }
-  //
 
-  // if (this.coinTypes[coinkey].amount === 0) {
-  //   this.refillChange = refill;
-  // } else {
-  //   this.refillChange;
-  // }
-  //}
   dispenseInventory(product, centsPaid) {
     // how much things cost to c/f how much money is inserted
-
     this.coinReturn =
       centsPaid - this.inventory.item[this.selectedProduct].price;
     this.dispenseItem = product;
     if (
-      // product selected
       this.inventory[this.selectedProduct] &&
-      //and money paid
       this.inventory[this.selectedProduct].price &&
       this.coinReturn
     ) {
