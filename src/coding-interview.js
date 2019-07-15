@@ -1,10 +1,9 @@
 class VendingMachine {
   constructor(inventory) {
-    // properties = variables assign to a class
     this.coinTypes = {
       fiveCents: {
         name: 0.05,
-        amount: 40
+        amount: 50
       },
       tenCents: {
         name: 0.1,
@@ -12,15 +11,15 @@ class VendingMachine {
       },
       twentyFiveCents: {
         name: 0.25,
-        amount: 40
+        amount: 50
       },
       oneDollar: {
         name: 1,
-        amount: 40
+        amount: 50
       },
       twoDollar: {
         name: 2,
-        amount: 0
+        amount: 25
       }
     };
 
@@ -46,8 +45,7 @@ class VendingMachine {
 
   selectProduct(product) {
     this.selectedProduct = product;
-    // checks whether product is in inventory?
-    // if not in inventory value will be  undefined
+
     if (
       this.inventory === undefined ||
       this.inventory.item === undefined ||
@@ -60,8 +58,6 @@ class VendingMachine {
     return this.inventory.item[product].price;
   }
 
-  // function-global
-  // method - function for a class
   payProduct(centsPaid) {
     if (
       !this.inventory ||
@@ -111,77 +107,79 @@ class VendingMachine {
     }
   }
 
-  returnChange() {
-    const change = this.coinReturn;
-    console.log(this.coinReturn);
-    this.coinReturn = 0;
-    return change;
-  }
-
   returnChanges(centsPaid, price) {
-    price = this.inventory.item[this.selectedProduct].price;
+    if (this.inventory.item[this.selectedProduct].units !== 0) {
+      price = this.inventory.item[this.selectedProduct].price;
 
-    this.coinReturn = centsPaid - price;
+      this.coinReturn = centsPaid - price;
 
-    // operate biggest to smallest so it returns least number of coins
-    let coins = [2, 1, 0.25, 0.1, 0.05];
-    let coinsRound = coins.map(coin => coin * 100);
+      let coins = [2, 1, 0.25, 0.1, 0.05];
+      let coinsRound = coins.map(coin => coin * 100);
 
-    let returnCoin = [];
-    for (let i in coinsRound) {
-      let finalChange = coinsRound[i];
-      //each index of the return array represents the no. of coin in each coin type to return
-      returnCoin.push(Math.floor(this.coinReturn / finalChange));
+      let returnCoin = [];
+      for (let i in coinsRound) {
+        let finalChange = coinsRound[i];
+        //each index of the return array represents the no. of coin in each coin type to return
+        returnCoin.push(Math.floor(this.coinReturn / finalChange));
 
-      //update change value
-      this.coinReturn = Math.round(this.coinReturn % finalChange);
-    }
-    this.result = returnCoin;
-
-    return returnCoin.reduce(
-      (coinTypes, amount, index) => {
-        switch (index) {
-          case 0:
-            coinTypes["twoDollar"] = coinTypes.twoDollar + amount;
-            break;
-          case 1:
-            coinTypes["oneDollar"] = coinTypes.oneDollar + amount;
-            break;
-          case 2:
-            coinTypes["twentyFiveCents"] = coinTypes.twentyFiveCents + amount;
-            break;
-          case 3:
-            coinTypes["tenCents"] = coinTypes.tenCents + amount;
-            break;
-          case 4:
-            coinTypes["fiveCents"] = coinTypes.fiveCents + amount;
-            break;
-        }
-        return coinTypes;
-      },
-      {
-        twoDollar: 0,
-        oneDollar: 0,
-        twentyFiveCents: 0,
-        tenCents: 0,
-        fiveCents: 0
+        //update change value
+        this.coinReturn = Math.round(this.coinReturn % finalChange);
       }
-    );
+      this.result = returnCoin;
+
+      return returnCoin.reduce(
+        (coinTypes, amount, index) => {
+          switch (index) {
+            case 0:
+              coinTypes["twoDollar"] = coinTypes.twoDollar + amount;
+              break;
+            case 1:
+              coinTypes["oneDollar"] = coinTypes.oneDollar + amount;
+              break;
+            case 2:
+              coinTypes["twentyFiveCents"] = coinTypes.twentyFiveCents + amount;
+              break;
+            case 3:
+              coinTypes["tenCents"] = coinTypes.tenCents + amount;
+              break;
+            case 4:
+              coinTypes["fiveCents"] = coinTypes.fiveCents + amount;
+              break;
+          }
+          return coinTypes;
+        },
+        {
+          twoDollar: 0,
+          oneDollar: 0,
+          twentyFiveCents: 0,
+          tenCents: 0,
+          fiveCents: 0
+        }
+      );
+    } else {
+      const change = this.coinReturn;
+      console.log(this.coinReturn, "booya");
+      this.coinReturn = 0;
+      return change;
+    }
   }
 
   resupplyChange(change) {
     this.refillChange = change;
     const coinkeys = Object.keys(this.coinTypes);
     for (const coinkey of coinkeys) {
-      if (
-        this.coinTypes === undefined ||
-        this.coinTypes[coinkey].amount === undefined
-      ) {
-        return null;
-      } else if (this.coinTypes[coinkey].amount === 0) {
+      // if (
+      //   this.coinTypes === undefined ||
+      //   this.coinTypes[coinkey].amount === undefined
+      // ) {
+      //   return null;
+      // } else
+      if (this.coinTypes[coinkey].amount === 25) {
         this.refillChange = change;
-      } else {
-        this.refillChange;
+        let finalreturn = change + this.coinTypes[coinkey].amount;
+        return finalreturn;
+      } else if (this.coinTypes[coinkey].amount > 25) {
+        this.refillChange = 0;
       }
     }
   }

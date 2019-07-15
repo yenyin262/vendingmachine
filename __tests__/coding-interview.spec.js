@@ -119,10 +119,10 @@ describe("VendingMachine", () => {
     it(" should select a product and return price", () => {
       expect(vendingMachine.selectProduct("MountainDew")).toEqual(400);
     });
-    it("should pay for product and return money for product out of stock ", () => {
+    it.only("should return money for product out of stock ", () => {
       vendingMachine.selectProduct("MountainDew");
       vendingMachine.payProduct(400);
-      expect(vendingMachine.coinReturn).toEqual(400);
+      expect(vendingMachine.returnChanges(400, 400)).toEqual(400);
     });
     it("should not dispense an item that is out of stock ", () => {
       vendingMachine.selectProduct("MountainDew");
@@ -164,14 +164,12 @@ describe("VendingMachine", () => {
         "twoDollar"
       ]);
     });
-    it("resupply change where the value of a coin has 0 amount ", () => {
-      vendingMachine.resupplyChange(20);
-      expect(vendingMachine.refillChange).toEqual(20);
+    it(" should resupply change where the value of a coin has reached an amount of 25 ", () => {
+      expect(vendingMachine.resupplyChange(25)).toEqual(50);
     });
-    //   it(" should select a product and return price ", () => {
-    //     //returns new object with this functions
-    //     // return value
-    //     expect(vendingMachine.selectProduct("GrapeFanta")).toEqual(100);
-    //   });
+    it(" should not resupply change where the value of a coin minimum amount is 26 ", () => {
+      vendingMachine.resupplyChange(null);
+      expect(vendingMachine.refillChange).toEqual(null);
+    });
   });
 });
