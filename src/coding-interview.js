@@ -183,23 +183,29 @@ class VendingMachine {
     return returnCoin;
   }
   resupplyChange(change) {
-    // let coinkey = Object.keys(this.coinTypes);
-
     this.refillChange = change;
-    if (
-      this.coinTypes[this.selectedCoin] === undefined ||
-      this.coinTypes[this.selectedCoin].amount === undefined
-    ) {
-      console.log(this.coinTypes[this.selectedCoin].amount, "help");
-      return null;
-    }
-
-    if (this.coinTypes[this.selectCoin].amount === 0) {
-      this.refillChange = refill;
-    } else {
-      this.refillChange;
+    const coinkeys = Object.keys(this.coinTypes);
+    for (const coinkey of coinkeys) {
+      if (
+        this.coinTypes === undefined ||
+        this.coinTypes[coinkey].amount === undefined
+      ) {
+        return null;
+      } else if (this.coinTypes[coinkey].amount === 0) {
+        this.refillChange = change;
+      } else {
+        this.refillChange;
+      }
     }
   }
+  //
+
+  // if (this.coinTypes[coinkey].amount === 0) {
+  //   this.refillChange = refill;
+  // } else {
+  //   this.refillChange;
+  // }
+  //}
   dispenseInventory(product, centsPaid) {
     // how much things cost to c/f how much money is inserted
 
