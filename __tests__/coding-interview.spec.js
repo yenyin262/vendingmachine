@@ -28,7 +28,7 @@ describe("VendingMachine", () => {
     it(" should pay for product and return money ", () => {
       vendingMachine.selectProduct("oreo");
       vendingMachine.payProduct(200);
-      expect(vendingMachine.coinReturn).toEqual(200);
+      expect(vendingMachine.returnChange()).toEqual(200);
     });
   });
   describe("vending machine with inventory", () => {
@@ -52,12 +52,13 @@ describe("VendingMachine", () => {
     it("should pay for product and return change ", () => {
       vendingMachine.selectProduct("GrapeFanta");
       vendingMachine.payProduct(200);
-      expect(vendingMachine.coinReturn).toEqual(100);
+      //   vendingMachine.selectedChange(100);
+      expect(vendingMachine.returnChange()).toEqual(100);
     });
     it("should dispense paid Item ", () => {
       vendingMachine.selectProduct("GrapeFanta");
       vendingMachine.payProduct(200);
-      vendingMachine.dispenseInventory("GrapeFanta");
+      vendingMachine.dispenseInventory("GrapeFanta", 200);
       expect(vendingMachine.dispenseItem).toEqual("GrapeFanta");
     });
     it("inventory updated for GrapeFanta item aft payment ", () => {
@@ -161,51 +162,36 @@ describe("VendingMachine", () => {
       expect(vendingMachine.dispenseItem).toEqual(null);
     });
   });
-  describe("vending machine with no coins", () => {
-    beforeEach(() => {
-      vendingMachine = new VendingMachine({
-        item: {
-          GrapeFanta: { price: 100, units: 15, maxUnits: 20 }
-        },
-        coins: {
-          fiveCents: {
-            name: 0.05,
-            amount: 1
-          },
-          tenCents: {
-            name: 0.1,
-            amount: 0
-          },
-          twentyFiveCents: {
-            name: 0.25,
-            amount: 0
-          },
-          OneDollar: {
-            name: 1.0,
-            amount: 0
-          },
-          TwoDollar: {
-            name: 1.0,
-            amount: 0
-          }
-        }
-      });
-    });
-    it("should check what is in the inventory", () => {
-      // if undefined = created but not used /
-      // null - no value
-      expect(vendingMachine.getInventory()).toEqual("GrapeFanta");
-    });
-    it(" should select a product and return price ", () => {
-      //returns new object with this functions
-      // return value
-      expect(vendingMachine.selectProduct("GrapeFanta")).toEqual(100);
-    });
-    // it(" should resupply coins when there is no change ", () => {
-    //   //returns new object with this functions
-    //   // return value
-    //   vendingMachine.resupplyChange();
-    //   expect(vendingMachine.refillChange).toEqual(20);
-    // });
-  });
+  //   describe.only("vending machine with available coins ", () => {
+  //     beforeEach(() => {
+  //       vendingMachine = new VendingMachine({
+  //         item: {
+  //           GrapeFanta: { price: 100, units: 15, maxUnits: 20 }
+  //         }
+  //       });
+  //     });
+  //     it("should check coins in the inventory", () => {
+  //       expect(vendingMachine.getCoin()).toEqual([
+  //         "fiveCents",
+  //         "tenCents",
+  //         "twentyFiveCents",
+  //         "OneDollar",
+  //         "TwoDollar"
+  //       ]);
+  //     });
+  //     it("should check coins in the inventory", () => {
+  //       expect(vendingMachine.resupplyChange(20)).toEqual(20);
+  //     });
+  // it(" should select a product and return price ", () => {
+  //   //returns new object with this functions
+  //   // return value
+  //   expect(vendingMachine.selectProduct("GrapeFanta")).toEqual(100);
+  // });
+  // it(" should resupply coins when there is no change ", () => {
+  //   //returns new object with this functions
+  //   // return value
+  //   vendingMachine.resupplyChange();
+  //   expect(vendingMachine.refillChange).toEqual(20);
+  // });
+  //  });
 });
