@@ -30,6 +30,7 @@ describe("VendingMachine", () => {
     });
     it("should pay for product and return change ", () => {
       vendingMachine.selectProduct("GrapeFanta");
+
       expect(vendingMachine.returnChanges(200, 100)).toEqual({
         twoDollar: 0,
         oneDollar: 1,

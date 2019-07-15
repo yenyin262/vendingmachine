@@ -108,10 +108,7 @@ class VendingMachine {
   }
 
   returnChanges(centsPaid, price) {
-    if (
-      this.inventory.item[this.selectedProduct].units !== 0 &&
-      !this.inventory.item[this.selectedProduct]
-    ) {
+    if (this.inventory.item[this.selectedProduct].units !== 0) {
       price = this.inventory.item[this.selectedProduct].price;
 
       this.coinReturn = centsPaid - price;
