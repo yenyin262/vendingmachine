@@ -47,11 +47,18 @@ describe("VendingMachine", () => {
     });
     it("inventory updated for GrapeFanta item aft payment ", () => {
       vendingMachine.selectProduct("GrapeFanta");
+
+      // why do we need to pay for the product before updating the inventory?
       vendingMachine.payProduct(200);
       vendingMachine.updateInventory(14);
       expect(vendingMachine.updateUnits).toEqual(14);
     });
   });
+
+  // this test suite seems to be testing the same things as the previous one
+  // i.e the "inventory check" is done again here
+  // you want to keep your tests orthogonal
+  // otherwise one code change and you have to change lots of tests
   describe("vending machine with two items", () => {
     beforeEach(() => {
       vendingMachine = new VendingMachine({
@@ -61,12 +68,14 @@ describe("VendingMachine", () => {
         }
       });
     });
+    // duplicate
     it("should check what is in the inventory", () => {
       expect(vendingMachine.getInventory()).toEqual([
         "GrapeFanta",
         "VanillaTea"
       ]);
     });
+    // duplicate
     it(" should select a product and return price", () => {
       expect(vendingMachine.selectProduct("VanillaTea")).toEqual(600);
     });
@@ -86,6 +95,7 @@ describe("VendingMachine", () => {
       vendingMachine.dispenseInventory("VanillaTea");
       expect(vendingMachine.dispenseItem).toEqual("VanillaTea");
     });
+    // duplicate
     it("inventory updated for VanillaTea item aft payment ", () => {
       vendingMachine.selectProduct("VanillaTea");
       vendingMachine.payProduct(600);
@@ -104,6 +114,7 @@ describe("VendingMachine", () => {
         }
       });
     });
+    // duplicate
     it("should check what is in the inventory", () => {
       expect(vendingMachine.getInventory()).toEqual([
         "GrapeFanta",
@@ -112,9 +123,11 @@ describe("VendingMachine", () => {
         "VanillaTea"
       ]);
     });
+    // duplicate
     it(" should select a product and return price", () => {
       expect(vendingMachine.selectProduct("MountainDew")).toEqual(400);
     });
+    // duplicate
     it("should return money for product out of stock ", () => {
       vendingMachine.selectProduct("MountainDew");
       vendingMachine.payProduct(400);
@@ -131,6 +144,7 @@ describe("VendingMachine", () => {
       vendingMachine.refillInventory(20);
       expect(vendingMachine.refill).toEqual(20);
     });
+    // unclear what this test is doing
     it("should not refill inventory for item with 20 units", () => {
       vendingMachine.selectProduct("HotPeppersChocBar");
       vendingMachine.refillInventory(0);
@@ -143,6 +157,7 @@ describe("VendingMachine", () => {
       expect(vendingMachine.dispenseItem).toEqual(null);
     });
   });
+  // very unclear what this is testing
   describe("Vending Machine and its change", () => {
     beforeEach(() => {
       vendingMachine = new VendingMachine({
