@@ -26,10 +26,9 @@ class VendingMachine {
     this.coinReturn = 0;
     this.selectedProduct = null;
     this.updateUnits = null;
-    this.refill = 0;
-    this.refillChange = 0;
+    // this.refill = 0;
+    // this.refillChange = 0;
     this.dispenseItem = null;
-    this.result = null;
 
     if (inventory) {
       this.inventory = inventory;
@@ -38,83 +37,127 @@ class VendingMachine {
     }
   }
 
-  getCoin() {
+  getCoinTypes() {
     this.coinTypes = Object.keys(this.coinTypes);
     return this.coinTypes;
   }
 
-  selectProduct(product) {
+  getPriceForProduct(product) {
     this.selectedProduct = product;
 
     if (
       this.inventory === undefined ||
-      this.inventory.item === undefined ||
-      this.inventory.item[product] === undefined ||
-      this.inventory.item[product].price === undefined
+      this.inventory[product] === undefined ||
+      this.inventory[product].price === undefined
     ) {
       return null;
     }
 
-    return this.inventory.item[product].price;
+    return this.inventory[product].price;
   }
 
-  payProduct(centsPaid) {
+  payProduct(centsPaid, product) {
     if (
-      !this.inventory ||
-      !this.inventory.item ||
-      !this.inventory.item[this.selectedProduct] === undefined
+      (this.inventory && this.inventory[this.selectedProduct] === undefined) ||
+      !this.inventory[this.selectedProduct] ||
+      this.inventory[this.selectedProduct].units === 0 ||
+      centsPaid < this.inventory[this.selectedProduct].price
     ) {
       this.coinReturn = centsPaid;
-    } else if (!this.inventory.item[this.selectedProduct]) {
-      this.coinReturn = centsPaid;
-    } else if (this.inventory.item[this.selectedProduct].units === 0) {
-      this.coinReturn = centsPaid;
-    } else {
-      this.coinReturn =
-        centsPaid - this.inventory.item[this.selectedProduct].price;
+      this.dispenseItem = null;
     }
+    //  else if (!this.inventory[this.selectedProduct]) {
+    //   this.coinReturn = centsPaid;
+    //   this.dispenseItem = null;
+    // } else if (this.inventory[this.selectedProduct].units === 0) {
+    //   this.coinReturn = centsPaid;
+    //   this.dispenseItem = null;
+    // } else if (centsPaid < this.inventory[this.selectedProduct].price) {
+    //   this.coinReturn = centsPaid;
+    //   this.dispenseItem = null;
+    // }
+    else {
+      this.coinReturn = centsPaid - this.inventory[this.selectedProduct].price;
+      this.dispenseItem = product;
+    }
+    return product;
+    // this.coinReturn =
+    //   centsPaid - this.inventory[this.selectedProduct].price;
+    // this.dispenseItem = product;
+    // if (
+    //   this.inventory[this.selectedProduct] &&
+    //   this.inventory[this.selectedProduct].price &&
+    //   this.coinReturn
+    // ) {
+    //   this.dispenseItem = product;
+    // } else {
+    //   this.dispenseItem;
+    // }
   }
+
+  // dispenseInventory(product, centsPaid) {
+  //   this.coinReturn =
+  //     centsPaid - this.inventory[this.selectedProduct].price;
+  //   this.dispenseItem = product;
+  //   if (
+  //     this.inventory[this.selectedProduct] &&
+  //     this.inventory[this.selectedProduct].price &&
+  //     this.coinReturn
+  //   ) {
+  //     this.dispenseItem = product;
+  //   } else {
+  //     this.dispenseItem;
+  //   }
+  // }
 
   updateInventory(update) {
-    this.inventory.item[this.selectedProduct].units = update;
-    if (this.inventory.item[this.selectedProduct]) {
+    this.inventory[this.selectedProduct].units = update;
+    if (this.inventory[this.selectedProduct]) {
       this.updateUnits = update;
+      return update;
     } else {
-      return this.inventory.item;
+      return this.inventory;
     }
   }
 
+  /// work on this part
   getInventory() {
-    if (this.inventory.item === undefined) {
+    if (this.inventory === undefined) {
       return null;
     }
-    const inventoryKeys = Object.keys(this.inventory.item).sort();
-    if (inventoryKeys.length > 1) {
+    const inventoryKeys = Object.keys(this.inventory).sort();
+    if (inventoryKeys.length > 0) {
       return inventoryKeys;
-    } else if (inventoryKeys.length > 0) {
-      return inventoryKeys[0];
     } else {
       return null;
     }
   }
 
-  refillInventory(refill) {
-    this.refill = refill;
-    if (this.inventory.item[this.selectedProduct].units === 0) {
-      this.refill = refill;
+  // refillInventoryForSelectedProduct(refillSelectedProduct) {
+  //   this.refill = refillSelectedProduct;
+  //   if (this.inventory[this.selectedProduct].units === 0) {
+  //     this.refill = refillSelectedProduct;
+  //   } else {
+  //     this.refill = null;
+  //   }
+  // }
+
+  refillInventoryForSelectedProduct(quantity, product) {
+    if (!this.inventory[product]) {
+      return "invalid product";
+    } else if (this.inventory[product].units + quantity > 20) {
+      return "item already fully stocked ";
     } else {
-      this.refill;
+      return (this.inventory[product].units += quantity);
     }
   }
 
-  returnChanges(centsPaid, price) {
-    if (this.inventory.item[this.selectedProduct].units !== 0) {
-      price = this.inventory.item[this.selectedProduct].price;
+  returnChanges(centsPaid) {
+    if (this.inventory[this.selectedProduct].units !== 0) {
+      this.coinReturn = centsPaid - this.inventory[this.selectedProduct].price;
 
-      this.coinReturn = centsPaid - price;
-
-      let coins = [2, 1, 0.25, 0.1, 0.05];
-      let coinsRound = coins.map(coin => coin * 100);
+      const coins = [2, 1, 0.25, 0.1, 0.05];
+      const coinsRound = coins.map(coin => coin * 100);
 
       let returnCoin = [];
       for (let i in coinsRound) {
@@ -125,37 +168,16 @@ class VendingMachine {
         //update change value
         this.coinReturn = Math.round(this.coinReturn % finalChange);
       }
-      this.result = returnCoin;
 
-      return returnCoin.reduce(
-        (coinTypes, amount, index) => {
-          switch (index) {
-            case 0:
-              coinTypes["twoDollar"] = coinTypes.twoDollar + amount;
-              break;
-            case 1:
-              coinTypes["oneDollar"] = coinTypes.oneDollar + amount;
-              break;
-            case 2:
-              coinTypes["twentyFiveCents"] = coinTypes.twentyFiveCents + amount;
-              break;
-            case 3:
-              coinTypes["tenCents"] = coinTypes.tenCents + amount;
-              break;
-            case 4:
-              coinTypes["fiveCents"] = coinTypes.fiveCents + amount;
-              break;
-          }
-          return coinTypes;
-        },
-        {
-          twoDollar: 0,
-          oneDollar: 0,
-          twentyFiveCents: 0,
-          tenCents: 0,
-          fiveCents: 0
-        }
-      );
+      const inventoryChange = {
+        twoDollar: returnCoin[0],
+        oneDollar: returnCoin[1],
+        twentyFiveCents: returnCoin[2],
+        tenCents: returnCoin[3],
+        fiveCents: returnCoin[4]
+      };
+
+      return inventoryChange;
     } else {
       const change = this.coinReturn;
       this.coinReturn = 0;
@@ -163,32 +185,30 @@ class VendingMachine {
     }
   }
 
-  resupplyChange(change) {
-    this.refillChange = change;
-    const coinkeys = Object.keys(this.coinTypes);
-    for (const coinkey of coinkeys) {
-      if (this.coinTypes[coinkey].amount === 25) {
-        this.refillChange = change;
-        let finalreturn = change + this.coinTypes[coinkey].amount;
-        return finalreturn;
-      } else if (this.coinTypes[coinkey].amount > 25) {
-        this.refillChange = 0;
-      }
-    }
-  }
+  //   resupplyChange(change, coinType) {
+  //     this.refillChange = change;
+  //     this.coinTypes = coinType;
+  //     const coinkeys = Object.keys(this.coinTypes);
+  //     for (const coinkey of coinkeys) {
+  //       if (
+  //         this.coinTypes[coinkey] === 25 &&
+  //         this.coinTypes[coinkey].amount === 25
+  //       ) {
+  //         this.refillChange = change;
+  //         let finalreturn = change + this.coinTypes[coinkey].amount;
+  //         return finalreturn;
+  //       } else if (this.coinTypes[coinkey].amount > 25) {
+  //         this.refillChange = 0;
+  //       }
+  //     }
+  //   }
+  // }
 
-  dispenseInventory(product, centsPaid) {
-    this.coinReturn =
-      centsPaid - this.inventory.item[this.selectedProduct].price;
-    this.dispenseItem = product;
-    if (
-      this.inventory[this.selectedProduct] &&
-      this.inventory[this.selectedProduct].price &&
-      this.coinReturn
-    ) {
-      this.dispenseItem = product;
+  resupplyChange(quantity, coinType) {
+    if (!this.coinTypes[coinType]) {
+      return "Invalid CoinType";
     } else {
-      this.dispenseItem;
+      this.coinTypes[coinType].amount += quantity;
     }
   }
 }
