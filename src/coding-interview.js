@@ -72,20 +72,14 @@ class VendingMachine {
   }
 
   updateInventory(product) {
-    console.log(product, this.inventory[product].units);
     this.inventory[product].units--;
   }
 
   getInventory() {
-    if (this.inventory === undefined) {
-      return null;
-    }
-    const inventoryKeys = Object.keys(this.inventory).sort();
-    if (inventoryKeys.length > 0) {
-      return inventoryKeys;
-    } else {
-      return null;
-    }
+    const inventory = Object.keys(this.inventory).sort();
+    if (inventory === "") return null;
+
+    return inventory;
   }
 
   refillInventoryForSelectedProduct(quantity, product) {

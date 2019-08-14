@@ -8,7 +8,7 @@ describe("VendingMachine", () => {
       vendingMachine = new VendingMachine({});
     });
     it("should check what is in the inventory", () => {
-      expect(vendingMachine.getInventory()).toEqual(null);
+      expect(vendingMachine.getInventory()).toEqual([]);
     });
     it(" should select a product and return no price", () => {
       expect(vendingMachine.getPriceForProduct("oreo")).toEqual(null);
@@ -18,11 +18,14 @@ describe("VendingMachine", () => {
     beforeEach(() => {
       vendingMachine = new VendingMachine({
         GrapeFanta: { price: 100, units: 15, maxUnits: 20 },
-        OrangeFanta: { price: 100, units: 0, maxUnits: 20 }
+        OrangeFanta: { price: 100, units: 5, maxUnits: 20 }
       });
     });
     it("should check what is in the inventory", () => {
-      expect(vendingMachine.getInventory()).toEqual("GrapeFanta, OrangeFanta");
+      expect(vendingMachine.getInventory()).toEqual([
+        "GrapeFanta",
+        "OrangeFanta"
+      ]);
     });
     it(" should select a product and return price ", () => {
       expect(vendingMachine.getPriceForProduct("GrapeFanta")).toEqual(100);
@@ -44,12 +47,6 @@ describe("VendingMachine", () => {
     it("should update inventory for GrapeFanta item aft payment ", () => {
       vendingMachine.payProduct(200, "GrapeFanta");
       expect(vendingMachine.inventory["GrapeFanta"].units).toEqual(14);
-    });
-    it("should not dispense Item that is out of stock", () => {
-      let result = vendingMachine.payProduct(200, "OrangeFanta");
-      expect(result).toEqual(
-        "product out of stock, please select another product"
-      );
     });
   });
 
