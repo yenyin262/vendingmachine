@@ -71,10 +71,6 @@ class VendingMachine {
     }
   }
 
-  updateInventory(product) {
-    this.inventory[product].units--;
-  }
-
   getInventory() {
     const inventory = Object.keys(this.inventory).sort();
     if (inventory === "") return null;
