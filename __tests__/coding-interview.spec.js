@@ -119,7 +119,7 @@ describe("VendingMachine", () => {
         "twoDollar"
       ]);
     });
-    it("should resupply change where the value of a coin has reached an amount of 25 ", () => {
+    it("should resupply change for valid coinType ", () => {
       vendingMachine.resupplyChange(10, "twoDollar");
       expect(vendingMachine.coinTypes["twoDollar"].amount).toEqual(35);
     });
